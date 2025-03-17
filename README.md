@@ -27,3 +27,11 @@ You should add a new sigalarm(interval, handler) system call. If an application 
 Add another system call sigreturn(), to reset the process state to before the handler was called. This system call needs to be made at the end of the handler so the process can resume where it left off.
 
 
+# Scheduling
+The default scheduling policy in xv6 is round-robin-based. In this task, you’ll implement two other scheduling policies and incorporate them in xv6. The kernel should only use one scheduling policy declared at compile time, with a default of round robin in case none are specified.
+
+Modify the makefile to support the SCHEDULER macro to compile the specified scheduling algorithm. Use the flags for compilation:-
+
+    Lottery Based Scheduling: LBS
+    Multi Level Feedback Queue: MLFQ
+    Your compilation process should look something like this: make clean; make qemu SCHEDULER=MLFQ.
