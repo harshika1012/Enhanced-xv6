@@ -34,4 +34,25 @@ Modify the makefile to support the SCHEDULER macro to compile the specified sche
 
     Lottery Based Scheduling: LBS
     Multi Level Feedback Queue: MLFQ
-    Your compilation process should look something like this: make clean; make qemu SCHEDULER=MLFQ.
+    Your compilation process should look something like this: make clean; make qemu 
+    SCHEDULER=MLFQ.
+
+# Lottery scheduling
+    Implement a preemptive lottery based scheduling policy that assigns a time slice to the process randomly in proportion to the number of tickets it owns. That is, the probability that the process runs in a given time slice is proportional to the number of tickets owned by it. You may use any method to generate (pseudo)random numbers.
+
+Implement a system call int settickets(int number) , which sets the number of tickets of the calling process. By default, each process should get one ticket; calling this routine makes it such that a process can raise the number of tickets it receives, and thus receive a higher proportion of CPU cycles. For example, a program can do the following to increase its tickets from the default of 1 to 2:
+
+int newTicketNum = settickets(2);
+if (newTicketNum == -1) {
+	// changing tickets failed
+	fprintf(2, "could not change tickets to 2 for process with pid %d\n", getpid());
+}
+
+This is the traditional lottery based scheduling policy, however, last time processes protested that coming early or late did not affect their winning chances. This time, if a process is considered the winner of the lottery, it is only if there are no other processes with the same number of tickets but an earlier arrival time.
+Example: If there are three processes:
+A, arrived at t=0s with 3 tickets,
+B, arrived at t=3s with 4 tickets,
+C, arrived at t=4s with 3 tickets,
+and C is chosen as the winner at t=5s, the result is overturned and handed to A because it arrived earlier but has the same number of tickets.
+
+Note: You’ll need to assign tickets to a process when it is created. Also, you’ll need to make sure a child process starts with the same number of tickets as its parent. Only processes that are in the RUNNABLE state can participate in the lottery. The time slice is 1 tick.
