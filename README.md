@@ -56,3 +56,32 @@ C, arrived at t=4s with 3 tickets,
 and C is chosen as the winner at t=5s, the result is overturned and handed to A because it arrived earlier but has the same number of tickets.
 
 Note: You’ll need to assign tickets to a process when it is created. Also, you’ll need to make sure a child process starts with the same number of tickets as its parent. Only processes that are in the RUNNABLE state can participate in the lottery. The time slice is 1 tick.
+
+
+# MLFQ
+Implement a simplified preemptive MLFQ scheduler that allows processes to move between different priority queues based on their behavior and CPU bursts.
+
+If a process uses too much CPU time, it is pushed to a lower priority queue, leaving I/O bound and interactive processes in the higher priority queues.
+    To prevent starvation, implement priority boosting.
+
+Details:
+
+    Create four priority queues, giving the highest priority to queue number 0 and lowest priority to queue number 3
+    The time-slice are as follows:
+        For priority 0: 1 timer tick
+        For priority 1: 4 timer ticks
+        For priority 2: 8 timer ticks
+        For priority 3: 16 timer ticks
+
+    NOTE: Here tick refers to the clock interrupt timer. (see kernel/trap.c)
+
+Synopsis for the scheduler:-
+ On the initiation of a process, push it to the end of the highest priority queue (priority 0).
+    You should always run the processes that are in the highest priority queue that is not empty. Example: Initial Condition: A process is running in queue number 2 and there are no processes in both queues 1 and 0.
+    Now if another process enters in queue 0, then the current running process (residing in queue number 2) must be preempted and the process in queue 0 should be allocated the CPU.(The kernel can only preempt the process when it gets control of the hardware which is at the end of each tick so you can assume this condition)
+    When the process completes, it leaves the system.
+    If the process uses the complete time slice assigned for its current priority queue, it is preempted and inserted at the end of the next lower level queue (except if it is already at the bottom queue, where it would be inserted at the end of the same queue.)
+    If a process voluntarily relinquishes control of the CPU(ex: for doing I/O operations), it leaves the queuing network, and when the process becomes ready again after the I/O operation, it is inserted at the tail of the same queue, from which it is relinquished earlier
+    A round-robin scheduler should be used for processes at the lowest priority queue.
+    To prevent starvation, implement priority boosting:
+        After a time period of 48 ticks, move all processes to the top most queue (priority 0)
