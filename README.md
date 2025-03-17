@@ -38,7 +38,7 @@ Modify the makefile to support the SCHEDULER macro to compile the specified sche
     SCHEDULER=MLFQ.
 
 # Lottery scheduling
-    Implement a preemptive lottery based scheduling policy that assigns a time slice to the process randomly in proportion to the number of tickets it owns. That is, the probability that the process runs in a given time slice is proportional to the number of tickets owned by it. You may use any method to generate (pseudo)random numbers.
+Implement a preemptive lottery based scheduling policy that assigns a time slice to the process randomly in proportion to the number of tickets it owns. That is, the probability that the process runs in a given time slice is proportional to the number of tickets owned by it. You may use any method to generate (pseudo)random numbers.
 
 Implement a system call int settickets(int number) , which sets the number of tickets of the calling process. By default, each process should get one ticket; calling this routine makes it such that a process can raise the number of tickets it receives, and thus receive a higher proportion of CPU cycles. For example, a program can do the following to increase its tickets from the default of 1 to 2:
 
